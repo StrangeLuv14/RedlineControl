@@ -1,8 +1,9 @@
-
 var config = {
 	host: process.env.HOST || 'localhost',
 	port: 8000
 }
+
+console.log('websocket listen on', `${config.host}:${config.port}`);
 
 const WebSocket = require('ws');
 const webSocketServer = new WebSocket.Server({ host: config.host, port: config.port });

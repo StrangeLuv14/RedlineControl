@@ -3,6 +3,7 @@
 /**
  * Module dependencies.
  */
+const config = require('../config/config');
 
 var app = require('../app');
 var debug = require('debug')('server:server');
