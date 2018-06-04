@@ -4,5 +4,5 @@ const os = require('os');
 
 module.exports = {
   NODE_ENV: '"production"',
-  HOST: `'${os.networkInterfaces().en0[1].address}'`
+  HOST: `'${os.networkInterfaces().wlan0[0].address}'`
 }
