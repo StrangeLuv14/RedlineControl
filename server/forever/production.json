@@ -1,0 +1,7 @@
+{
+	"uid":"RedlineControl",
+	"append":true,
+	"watch":true,
+	"script":"./bin/www",
+	"sourceDir":"/home/pi/Redline/RedlineControl/server"
+}

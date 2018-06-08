@@ -3,16 +3,19 @@ const webSocketServer = require('./webSocketServer');
 
 
 var config = {
-	mac: "3c:15:c2:d6:17:fc"
+	mac: ["18:31:bf:b9:6b:2e", "18:31:bf:b8:cd:0c"]
 }
 
 module.exports.wakeUp = function (done) {
-	wol.wake(config.mac, function (error) {
-		if (error) {
-			return done(error)
-		}
-		done(undefined, 'Media server is up.');
+	addresses = config.mac;
+	addresses.forEach(function (address) {
+		wol.wake(address, function(error) {
+			if(error) {
+				return done(error);
+			}
+		});
 	});
+	done(undefined, "Media server is up");
 }
 
 module.exports.shutDown = function (done) {

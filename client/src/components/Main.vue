@@ -102,7 +102,7 @@ export default {
 				console.log(videoNames)
 				var myVideos = []
 				for (var i = 0; i < videoNames.length; i++) {
-					var video = { id: i+1, name: videoNames[i], thumbnail: '/static/img/' + videoNames[i]}
+					var video = { id: i+1, name: videoNames[i], thumbnail: '/static/img/' + videoNames[i].split('.')[0] + '.png'}
 					myVideos.push(video)
 				}
 				//console.log('Browser get video names: ' + myVideos);

@@ -4,6 +4,19 @@ var router = express.Router();
 const mediaServer = require('../services/mediaServer');
 const projector = require('../services/projector');
 
+const SerialPort = require('serialport');
+var ports = [];
+SerialPort.list().then((lists) => {
+	lists.forEach((list) => {
+		var comName = list.comName;
+		console.log(comName);
+		const port =  new SerialPort(comName);
+		ports.push(port);
+	});
+});
+
+
+
 router.post('/poweron', function(req, res) {
 	console.log(req.url);
 	mediaServer.wakeUp(function(error, result) {
@@ -16,22 +29,23 @@ router.post('/poweron', function(req, res) {
 });
 
 router.post('/projectoron', function(req, res) {
-	projector.powerOn( function(error) {
-		if (error) {
-			console.error("Failed Power on projector: " + error.code);
-		}
-		res.json(req.body);
+	ports.forEach((port) => {
+		console.log(port.path);
+		port.write('V99S0001\r');
+		port.write('V99S0001\r');
+		port.write('V99S0001\r');
 	});
+	res.send('projector on');
 });
 
 router.post('/projectoroff', function(req, res) {
-    console.log('receive message from browser: %s', control);
-	projector.powerOff( function(error) {
-		if (error) {
-			console.error("Failed Power off projector: " + error.code);
-		}
-		res.json(req.body);
+	ports.forEach((port) => {
+		console.log(port.path);
+		port.write('V99S0002\r');
+		port.write('V99S0002\r');
+		port.write('V00S0002\r');
 	});
+	res.send('projector off');
 });
 
 router.use(function(req, res) {
