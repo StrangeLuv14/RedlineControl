@@ -1,10 +1,7 @@
 <template lang="html">
 	<div>
-		<app-video-groups :themes="themes" @themechange="selectedTheme = $event"></app-video-groups>
-		<app-videos :videos="videos"></app-videos>
-		<div class="">
-			{{selectedTheme}}
-		</div>
+		<app-video-groups :themes="getThemes" @themechange="selectedTheme = $event"></app-video-groups>
+		<app-videos :videos="getVideos"></app-videos>
 	</div>
 </template>
 
@@ -20,45 +17,39 @@ export default {
 	},
 	data: function() {
 		return {
-			folder: [
-				{
-					id: 1,
-					name: 'Theme1',
-					videos: [{ id: 1, name: 'Video1' },
-							 { id: 2, name: 'Video2' }]
-				},
-				{
-					id: 2,
-					name: 'Theme2',
-					videos: [{ id: 1, name: 'Video3' },
-							 { id: 2, name: 'Video4' },
-						 	 { id: 3, name: 'Video5' },]
-				},
-				{
-					id: 3,
-					name: 'Theme3',
-					videos: [{ id: 1, name: 'Video6' }]
-				}
-			],
-			selectedTheme: 'Theme1',
+			// folder: [
+			// 	{ id: 1, name: 'Video1', theme:'Theme1' },
+			// 	{ id: 1, name: 'Video2', theme:'Theme1' },
+			// 	{ id: 1, name: 'Video3', theme:'Theme1' },
+			// 	{ id: 1, name: 'Video4', theme:'Theme2' },
+			// 	{ id: 1, name: 'Video5', theme:'Theme2' },
+			// 	{ id: 1, name: 'Video6', theme:'Theme3' },
+			// 	{ id: 1, name: 'Video7', theme:'Theme3' },
+			// 	{ id: 1, name: 'Video8', theme:'Theme3' },
+			// 	{ id: 1, name: 'Video9', theme:'Theme3' }
+			// ],
+			folder: [],
+			selectedTheme: 'Theme1'
 		}
 	},
 	computed: {
-		themes: function() {
-			return this.folder.map(function(group) {return {name: group.name, id:group.id}});
-		},
-		videos: {
-			get: function() {
-				var videos = {}
-				this.folder.forEach((theme) => {
-					if (theme.name === this.selectedTheme) {
-						videos = theme.videos;
-					}
-				});
-				return videos;
-			},
-			set: function() {
+		getThemes: function() {
+			var themeArray = this.folder.map(function(video) {return video.theme});
+			var themeSet = new Set(themeArray)
+			var themes = [];
+			for (let theme of themeSet.values()) {
+				themes.push(theme)
 			}
+			return themes;
+		},
+		getVideos: function() {
+			var videoArray = this.folder.filter((video) => {
+				return video.theme == this.selectedTheme;
+			})
+			var videos = videoArray.map((video) => {
+				return {name: video.name, id: video.id}
+			})
+			return videos;
 		}
 	},
 	mounted () {
@@ -67,21 +58,12 @@ export default {
 	methods: {
 		async getFilenames() {
 			const response = await api().get('/load');
-			var videoPaths = response.data.relpath
-			console.log(videoPaths)
-			if (videoPaths !== undefined) {
-				var theme = videoPaths.split('/')[0];
-				var name = videoPaths.split('/')[1];
-				var myVideos = []
-				for (var i = 0; i < videoPaths.length; i++) {
-					var video = { id: i+1, name: name, }
-					myVideos.push(video)
-				}
-				//console.log('Browser get video names: ' + myVideos);
-				this.videos = myVideos
-			} else {
-				this.videos = {}
-			}
+			var videos = response.data;
+			var folder = [];
+			videos.forEach((video) => {
+				folder.push({theme: video.name, name: video.video, id: video.id})
+			});
+			this.folder = folder;
 		}
 	}
 }

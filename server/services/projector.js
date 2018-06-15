@@ -1,9 +1,28 @@
+const config = require('../config/projector');
+
 const PJLink = require('pjlink');
 
-var config = {
-	host: "10.0.0.10",
-	port: 4352,
-	password: "redline123"
-};
+const projectors = []
 
-module.exports = new PJLink(config.host, config.port, config.password);
+config.hosts.forEach((host) => {
+	projectors.push(new PJLink(host, config.port, config.password));
+});
+
+module.exports.powerOn = function (done) {
+	projectors.forEach(projector => projector.powerOn((err) => {
+		if (err) {
+			return done(err);
+		}
+	}));
+	return done(undefined, "Projectors are on");
+}
+
+module.exports.powerOff = function (done) {
+	projectors.forEach(projector => projector.powerOff((err) => {
+		if (err) {
+			return done(err);
+		}
+
+	}));
+	return done(undefined, "Projectors are off");
+}

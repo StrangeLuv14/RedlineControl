@@ -1,15 +1,12 @@
+const config = require('../config/mediaServer');
+
 const wol = require('node-wol');
 const webSocketServer = require('./webSocketServer');
-
-
-var config = {
-	mac: ["18:31:bf:b9:6b:2e", "18:31:bf:b8:cd:0c"]
-}
 
 module.exports.wakeUp = function (done) {
 	addresses = config.mac;
 	addresses.forEach(function (address) {
-		wol.wake(address, function(error) {
+		wol.wake(address, {address: '10.1.1.255'}, function(error) {
 			if(error) {
 				return done(error);
 			}
