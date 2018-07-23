@@ -31,7 +31,8 @@ export default {
 	computed: {
 		imgSrc: function () {
 			console.log(this.video);
-			return '/static/img/' + this.video.id +  '.png'
+			// return '/static/img/' + this.video.id +  '.png'
+			return '/static/img/1.png'
 		}
 	}
 }

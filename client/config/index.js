@@ -45,11 +45,11 @@ module.exports = {
   build: {
     // Template for index.html
     index: path.resolve(__dirname, '../../server/public/index.html'),
-	//index: path.resolve(__dirname, '../dist/index.html'),
+    //index: path.resolve(__dirname, '../dist/index.html'),
 
     // Paths
     assetsRoot: path.resolve(__dirname, '../../server/public'),
-	//assetsRoot: path.resolve(__dirname, '../dist'),
+    //assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
 
@@ -66,7 +66,9 @@ module.exports = {
     // Before setting to `true`, make sure to:
     // npm install --save-dev compression-webpack-plugin
     productionGzip: false,
-    productionGzipExtensions: ['js', 'css'],
+    productionGzipExtensions: [
+      'js', 'css'
+    ],
 
     // Run the build command with an extra argument to
     // View the bundle analyzer report after build finishes:

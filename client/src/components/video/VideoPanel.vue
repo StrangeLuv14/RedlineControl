@@ -17,7 +17,7 @@ export default {
 	},
 	data: function() {
 		return {
-			selectedTheme: 'Panel1',
+			selectedTheme: this.getThemes,
 			folder: [
 				{ id: 1, name: 'Intro', theme:'Panel1' },
 				{ id: 2, name: 'Sakura', theme:'Panel1' },
@@ -51,7 +51,7 @@ export default {
 		}
 	},
 	mounted () {
-		// this.getFilenames();
+		this.getFilenames();
 	},
 	methods: {
 		async getFilenames() {
