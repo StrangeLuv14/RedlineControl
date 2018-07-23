@@ -1,4 +1,6 @@
 client/node_modules/
 server/node_modules/
+server/.DS_Store
 TouchDesigner/
 package-lock.json
+.DS_Store

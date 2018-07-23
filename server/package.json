@@ -4,20 +4,20 @@
   "private": true,
   "scripts": {
     "dev": "nodemon ./bin/www",
-    "start": "NODE_ENV=production forever start -l ./forever.log -o ./forever.out.log -e ./forever.err.log ./forever/production.json",
-    "stop": "forever stop ./bin/www"
+    "start": "pm2 start ./bin/www",
+    "stop": "pm2 stop ./bin/www",
+    "postinstall": "npm run start"
   },
   "dependencies": {
     "body-parser": "^1.18.3",
     "cors": "^2.8.4",
     "debug": "~2.6.9",
     "express": "~4.16.0",
-    "forever": "^0.15.3",
     "http-errors": "~1.6.2",
     "morgan": "^1.9.0",
-    "node-wol": "^0.1.1",
     "nodemon": "^1.17.4",
     "pjlink": "^0.2.4",
+    "pm2": "^2.10.4",
     "serialport": "^6.2.0",
     "ws": "^5.2.0"
   }

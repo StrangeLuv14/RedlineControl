@@ -17,19 +17,17 @@ export default {
 	},
 	data: function() {
 		return {
-			// folder: [
-			// 	{ id: 1, name: 'Video1', theme:'Theme1' },
-			// 	{ id: 1, name: 'Video2', theme:'Theme1' },
-			// 	{ id: 1, name: 'Video3', theme:'Theme1' },
-			// 	{ id: 1, name: 'Video4', theme:'Theme2' },
-			// 	{ id: 1, name: 'Video5', theme:'Theme2' },
-			// 	{ id: 1, name: 'Video6', theme:'Theme3' },
-			// 	{ id: 1, name: 'Video7', theme:'Theme3' },
-			// 	{ id: 1, name: 'Video8', theme:'Theme3' },
-			// 	{ id: 1, name: 'Video9', theme:'Theme3' }
-			// ],
-			folder: [],
-			selectedTheme: 'Theme1'
+			selectedTheme: 'Panel1',
+			folder: [
+				{ id: 1, name: 'Intro', theme:'Panel1' },
+				{ id: 2, name: 'Sakura', theme:'Panel1' },
+				{ id: 3, name: 'Ocean', theme:'Panel1' },
+				{ id: 4, name: 'Planet', theme:'Panel1' },
+				{ id: 5, name: 'Froest', theme:'Panel1' },
+				{ id: 6, name: 'Galaxy', theme:'Panel1' },
+				{ id: 7, name: 'Shuimo', theme:'Panel1' },
+				{ id: 8, name: 'CityLight', theme:'Panel1' },
+			]
 		}
 	},
 	computed: {
@@ -53,7 +51,7 @@ export default {
 		}
 	},
 	mounted () {
-		this.getFilenames();
+		// this.getFilenames();
 	},
 	methods: {
 		async getFilenames() {

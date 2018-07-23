@@ -1,5 +1,5 @@
 <template lang="html">
-	<div class="card-columns">
+	<div class="card-columns" :style="{'column-count': 2}">
 		<app-video
 		v-for="video in videos"
 		:key="video.id"
