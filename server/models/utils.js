@@ -1,10 +1,12 @@
 import mongoose from 'mongoose'
+import mongodb from 'mongodb'
 import Album from '../models/album'
 import Story from '../models/story'
 
 const ObjectId = mongoose.Types.ObjectId
 
 import fs from 'fs'
+import path from 'path'
 
 const saveData = (JSONFile) => {
     const dataObj = JSON.parse(JSONFile)
@@ -78,6 +80,40 @@ const buildFromFile = () => {
     })
 }
 
-const loadImages = () => {}
+const loadDatabase = (db) => {
+    fs.readdir('./public/media', (err, files) => {
+        if (err) {
+            console.log(`Read media folder failed: ${err.message}`)
+            console.log('Create media folder')
+            fs.mkdir('./public/media', (err) => {
+                if (err) {
+                    console.log(`Create media folder failed: ${err.message}`);
+                }
+            })
+        }
+        if (!files || files.length === 0) {
+            console.log('Media folder is empty, download files');
+            const bucket = new mongodb.GridFSBucket(db)
 
-export default {loadImages}
+            // get gridFS file collections
+            const File = db.collection('fs.files')
+            File.find({}).toArray().then(files => {
+                files.forEach(file => {
+                    try {
+                        fs.mkdirSync('./public/media/' + file.filename.split('/')[0])
+                    } catch (e) {}
+                    const filepath = path.join(__dirname, '../public/media/', file.filename)
+                    bucket.openDownloadStream(file._id).pipe(fs.createWriteStream(filepath)).on('error', (err) => {
+                        log(`Error download: ${err.message}`)
+                    }).on('end', () => {
+                        console.log(`${filepath}`);
+                    })
+                })
+            }).catch(err => {
+                console.log(err);
+            })
+        }
+    })
+}
+
+export default {loadDatabase}

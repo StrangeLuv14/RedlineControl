@@ -13,4 +13,6 @@ router.post('/select', playbackController.select)
 
 router.get('/select', playbackController.getStoryInfo)
 
+router.post('/volume', playbackController.volume)
+
 export default router

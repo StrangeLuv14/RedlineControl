@@ -4,16 +4,19 @@
 /**
  * Log configuration
  */
- import chalk from 'chalk'
- global.log = (msg) => {
-     console.log(chalk.rgb(0, 128, 128)(msg))
+import chalk from 'chalk'
+global.log = (msg) => {
+    console.log(chalk.rgb(0, 128, 128)(msg))
  }
- global.warning = (msg) => {
-     console.warning(chalk.orange(msg))
- }
- global.error = (msg) => {
-     console.error(chalk.red(msg))
- }
+global.warning = (msg) => {
+    console.warning(chalk.orange(msg))
+}
+global.error = (msg) => {
+    console.error(chalk.red(msg))
+}
+global.devlog = (msg)=> {
+	console.log(chalk.yellow(msg))
+}
 
 
 /**

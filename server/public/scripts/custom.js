@@ -434,6 +434,72 @@ $(document).ready(function() {
         $('.wrap-error .error-confirm').on('click', function() {
             $('.wrap-error').hide();
         });
+
+        //音量
+        var rangeSlider = function() {
+            var slider = $('.range-slider'),
+                range = $('.range-slider__range'),
+                value = $('.range-slider__value');
+
+            slider.each(function() {
+
+                value.each(function() {
+                    var that = $(this);
+
+                    //初始默认值 50
+                    var value = $(this).prev().attr('value');
+                    $(this).html(value);
+
+                    //获取当前音量
+                    $.ajax({
+                        type: 'get',
+                        url: site + '/playback/volume',
+                        dataType: 'json',
+                        error: function(msg) {
+                            console.log(msg);
+                        },
+                        success: function(data) {
+                            if (data != null) {
+                                current_vol = data.volume;
+
+                                that.prev().attr('value', current_vol);
+                                that.html(current_vol);
+
+                            }
+
+                        }
+
+                    });
+                });
+
+                //滑块调节
+                range.on('input', function() {
+                    $(this).next(value).html(this.value);
+                });
+            });
+
+            //监听滑块值变化 post音量值
+            //
+            range.change(function() {
+                var final_value = this.value;
+                $.ajax({
+                    type: 'POST',
+                    url: site + '/playback/volume',
+                    data: {
+                        "volume": final_value
+                    },
+                    error: function(msg) {
+                        console.log(msg);
+                    },
+                    success: function(data) {
+                        console.log(data);
+                    }
+                });
+            });
+        };
+
+        rangeSlider();
+
         // status page
         $('.status-projector-power').on('click', function() {
             projector_status = !projector_status;
@@ -548,6 +614,39 @@ $(document).ready(function() {
                     console.log(msg.responseText);
                     $('.wrap-error .modal p').text(msg.responseText);
                     $('.wrap-error').show();
+                }
+            });
+        });
+
+        //reset button
+        $('.status-reset').on('click', function() {
+            $('#menu3 .status-div .reset-control .icon-spin').show();
+            $('.status-reset')[0].classList.add('button-dark');
+            $('.status-reset')[0].classList.remove('button-teal');
+            $.ajax({
+                type: 'POST',
+                url: site + '/reset',
+                data: {
+                    "reset": "true"
+                },
+                success: function(result) {
+                    console.log(result.reset);
+                    if (result) {
+                        $('.status-reset')[0].classList.add('button-teal');
+                        $('.status-reset')[0].classList.remove('button-dark');
+                        $('#menu3 .status-div .reset-control em').text('已更新');
+                        $('#menu3 .status-div .reset-control .icon-spin').hide();
+                    }
+
+                },
+                error: function(msg) {
+                    console.log(msg.responseText);
+                    $('.wrap-error .modal p').text(msg.responseText);
+                    $('.wrap-error').show();
+                    $('.status-reset')[0].classList.add('button-teal');
+                    $('.status-reset')[0].classList.remove('button-dark');
+                    $('#menu3 .status-div .reset-control em').text('更新失败');
+                    $('#menu3 .status-div .reset-control .icon-spin').hide();
                 }
             });
         });

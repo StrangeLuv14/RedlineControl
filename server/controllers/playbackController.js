@@ -68,4 +68,19 @@ const getStoryInfo = (req, res) => {
     })
 }
 
-export default {control, getPlaybackStatus, select, getStoryInfo}
+const volume = (req, res) => {
+
+    const command = req.body.volume
+    mediaServer.sendOSC('/volume', [
+        {
+            type: 'i',
+            value: command
+        }
+    ]).then(result => {
+        res.json({volume: result})
+    }).catch(err => {
+        res.json({error: err})
+    })
+}
+
+export default {control, getPlaybackStatus, select, getStoryInfo, volume}
