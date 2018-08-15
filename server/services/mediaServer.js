@@ -1,61 +1,25 @@
-const webSocketServer = require('./webSocketServer');
-const ethernetPowerControl = require('./ethernetPowerControl')
+import webSocketServer from './webSocketServer'
 
-module.exports.wakeUp = function(done) {
-    ethernetPowerControl.powerOn((result) => {
-        done(result)
-    })
-}
-
-module.exports.shutDown = function(done) {
-    ethernetPowerControl.powerOff((result) => {
-        done(result)
-    })
-}
-
-module.exports.getStatus = function(done) {
-    ethernetPowerControl.getPowerStatus((result) => {
-        done(result)
-    })
-}
-
-module.exports.getConfig = function(done) {
-    ethernetPowerControl.getConfig((result) => {
-        done(result)
-    })
-}
-
-module.exports.play = function(control, done) {
+// Methods for Media Server Playback Control
+const sendCommand = (command) => {
     const clients = webSocketServer.clients
-    if (clients.lengths > 0) {
-        webSocketServer.clients.forEach(function each(client) {
-            client.send(control);
-        });
-    }
-    done(undefined, 'Finish play movie')
+    return new Promise((resolve, reject) => {
+        if (clients.size === 0) {
+            reject('No available clients')
+        }
+        webSocketServer.clients.forEach(client => client.send(command))
+        if (command === 'play') {
+            resolve({playback: 'playing'})
+        } else if (command === 'pause') {
+            resolve({playback: 'pause'})
+        } else if (command === 'stop') {
+            resolve({playback: 'stop'})
+        } else if (command.split(' ')[0] === 'video') {
+            resolve({select: 'OK'})
+        } else {
+            reject('invalid command')
+        }
+    })
 }
 
-module.exports.pause = function(control, done) {
-    const clients = webSocketServer.clients
-    if (clients.lengths > 0) {
-        webSocketServer.clients.forEach(function each(client) {
-            client.send(control);
-        });
-    }
-    done(undefined, 'Finish pause movie')
-}
-
-module.exports.stop = function(control, done) {
-    webSocketServer.clients.forEach(function each(client) {
-        client.send(control);
-    });
-    done(undefined, 'Finish stop movie')
-}
-
-module.exports.select = function(id, done) {
-    const control = 'video ' + id
-    webSocketServer.clients.forEach(function each(client) {
-        client.send(control);
-    });
-    done(undefined, 'Finish select movie')
-}
+export default {sendCommand}

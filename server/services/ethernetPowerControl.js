@@ -138,77 +138,69 @@ const getStatus = (conn, res) => {
 }
 
 const writeToServer = (command, done) => {
-    addrs.forEach((addr) => {
-        console.log(`Connect to ${addr}`);
-        const client = net.createConnection(1500, addr, () => {
-            console.log(`Connected to ${addr}:1500`);
-            client.setEncoding('hex')
+    return new Promise((resolve, reject) => {
+        addrs.forEach((addr) => {
+            console.log(`Connect to ${addr}`);
+            const client = net.createConnection(1500, addr, () => {
+                console.log(`Connected to ${addr}:1500`);
+                client.setEncoding('hex')
 
-            // write request
-            client.write(Buffer.from(command), () => {
-                // console.log('Write data to server');
+                // write request
+                client.write(Buffer.from(command), () => {
+                    // console.log('Write data to server');
+                })
+
+                // handle response data
+                client.on('data', function(data) {
+                    console.log(`Received data: ${data}`);
+                    result = getStatus(this, data)
+
+                    // Push result into results array
+                    if (result) {
+                        console.log(`Operation on ${this.remoteAddress}: ${result.operation}: ${result.status}`);
+                        results.push(result)
+                    }
+
+                    // return all results
+                    if (results.length === addrs.length) {
+                        resolve(results)
+                        results = []
+                    }
+
+                    // end connection
+                    this.end()
+                })
+
             })
 
-            // handle response data
-            client.on('data', function(data) {
-                console.log(`Received data: ${data}`);
-                result = getStatus(this, data)
-                // client.end()
-
-                // Push result into results array
-                if (result) {
-                    console.log(`Operation on ${this.remoteAddress}: ${result.operation}: ${result.status}`);
-                    results.push(result)
+            client.on('error', function(err) {
+                if (err.code !== 'ECONNRESET') {
+                    console.log('writeToServer reject');
+                    reject(`Connection on ${this.remoteAddress} error: ${err.code}`)
                 }
-
-                // return all results
-                if (results.length === addrs.length) {
-                    done(results)
-                    results = []
-                }
-
-                this.end()
             })
 
-        })
-
-        client.on('error', function(err) {
-            console.log(`Connection on ${this.remoteAddress} error: ${err.code}`);
-        })
-
-        client.on('end', () => {
-            console.log('Disconnect from server');
+            client.on('end', () => {
+                console.log('Disconnect from server');
+            })
         })
     })
 }
 
-const powerOn = (done) => {
-    console.log('Power On');
-    writeToServer(commands.on, (result) => {
-        done(result)
-    })
+const powerOn = () => {
+    return writeToServer(commands.on)
 }
 
-const powerOff = (done) => {
-    console.log('Power Off');
-    console.log(`Shut down ${clients.length} Clients`)
-    writeToServer(commands.off, (result) => {
-        done(result)
-    })
+const powerOff = () => {
+    return writeToServer(commands.off)
 }
 
-const getPowerStatus = (done) => {
-    console.log('Get Media Server Power Status');
-    writeToServer(commands.status, (result) => {
-        done(result)
-    })
+const getPowerStatus = () => {
+    return writeToServer(commands.status)
 }
 
-const getConfig = (done) => {
-    console.log('Get Ethernet Power Control Configure');
-    writeToServer(commands.config, (result) => {
-        done(result)
-    })
+const getConfig = () => {
+    return writeToServer(commands.config)
 }
 
 module.exports = {
