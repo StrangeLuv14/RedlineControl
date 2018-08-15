@@ -1,5 +1,21 @@
 #!/usr/bin/env node
 
+
+/**
+ * Log configuration
+ */
+ import chalk from 'chalk'
+ global.log = (msg) => {
+     console.log(chalk.rgb(0, 128, 128)(msg))
+ }
+ global.warning = (msg) => {
+     console.warning(chalk.orange(msg))
+ }
+ global.error = (msg) => {
+     console.error(chalk.red(msg))
+ }
+
+
 /**
  * Module dependencies.
  */
@@ -27,7 +43,7 @@ var server = http.createServer(app);
  * Listen on provided port, on all network interfaces.
  */
 server.listen(port, host);
-console.log("Http server listening on\t\t\t\t" + host + ":" + port);
+log("Http server listening on\t\t\t\t" + host + ":" + port);
 server.on('error', onError);
 server.on('listening', onListening);
 

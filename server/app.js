@@ -15,7 +15,7 @@ import fs from 'fs'
 
 const db = mongoose.connection
 db.on('open', function() {
-    console.log('Connected to DB')
+    log('Database opened')
     const that = db
     fs.readdir('./public/media', (err, files) => {
         if (err) {

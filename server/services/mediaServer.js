@@ -1,25 +1,37 @@
-import webSocketServer from './webSocketServer'
+import osc from 'osc'
 
-// Methods for Media Server Playback Control
-const sendCommand = (command) => {
-    const clients = webSocketServer.clients
+const udpPort = new osc.UDPPort({localAddress: '0.0.0.0', localPort: 57121, metadata: true, broadcast: true})
+
+// udpPort.on('bundle', (oscBundle, timeTag, info) => {
+//     console.log(`Receive OSC bundle(${timeTag}): ${oscBundle}`);
+// })
+
+udpPort.open()
+
+udpPort.on('ready', () => {
+    log('OSC port ready')
+})
+
+//relay received message back to sendOSC function
+udpPort.on('message', function(msg) {
+    this.emit('received', msg)
+})
+
+const sendOSC = (address, args) => {
+    log(`Send OSC message to ${address}`)
+    udpPort.send({
+        address: address,
+        args: args
+    }, 'localhost', 7000)
+
     return new Promise((resolve, reject) => {
-        if (clients.size === 0) {
-            reject('No available clients')
-        }
-        webSocketServer.clients.forEach(client => client.send(command))
-        if (command === 'play') {
-            resolve({playback: 'playing'})
-        } else if (command === 'pause') {
-            resolve({playback: 'pause'})
-        } else if (command === 'stop') {
-            resolve({playback: 'stop'})
-        } else if (command.split(' ')[0] === 'video') {
-            resolve({select: 'OK'})
-        } else {
-            reject('invalid command')
-        }
+        udpPort.once('received', msg => {
+            const address = msg.address
+            const status = msg.args[0].value
+            log(`Receive OSC message from address ${address}: ${status}`)
+            resolve(status)
+        })
     })
 }
 
-export default {sendCommand}
+export default {sendOSC}

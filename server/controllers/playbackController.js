@@ -15,8 +15,14 @@ const control = (req, res) => {
         playbackStatus = command
     }
 
-    mediaServer.sendCommand(command).then(result => {
-        res.json(result)
+    mediaServer.sendOSC('/playback', [
+        {
+            type: 's',
+            value: command
+        }
+    ]).then(result => {
+        log(result)
+        res.json({playback: result})
     }).catch(err => {
         res.json({error: err})
     })
@@ -39,8 +45,14 @@ const getPlaybackStatus = (req, res) => {
 
 const select = (req, res) => {
     const command = req.body.story_id
-    mediaServer.sendCommand(`video ${command}`).then(result => {
-        res.json(result)
+
+    mediaServer.sendOSC('/select', [
+        {
+            type: 'i',
+            value: command
+        }
+    ]).then(result => {
+        res.json({select: 'OK'})
     }).catch(err => {
         res.json({error: err})
     })
