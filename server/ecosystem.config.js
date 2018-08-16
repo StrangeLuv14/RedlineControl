@@ -16,11 +16,11 @@ module.exports = {
 
         // Second application
         {
-            name: 'RedlineControl',
-            script: './bin/www',
-            interpreter: 'babel-node',
+            name: 'Node',
+            script: './lib/bin/www',
+            interpreter: 'node',
             env_production: {
-                NODE_ENV: 'production'
+                NODE_ENV: 'development'
             }
         }
     ],

@@ -1,5 +1,4 @@
-client/node_modules/
-server/node_modules/
+client
 server/public/media
 server/.DS_Store
 TouchDesigner/

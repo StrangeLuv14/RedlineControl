@@ -3,10 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "nodemon --exec babel-node ./bin/www",
-    "staging": "NODE_ENV=staging nodemon --exec babel-node ./bin/www",
+    "dev": "nodemon --exec babel-node ./src/bin/www",
     "test": "nodemon --exec 'mocha --require babel-register'",
-	"build": "./node_modules/.bin/babel src -d lib",
+	"build": "./node_modules/.bin/babel src -d lib -D",
     "postinstall": "npm run start"
   },
   "dependencies": {
