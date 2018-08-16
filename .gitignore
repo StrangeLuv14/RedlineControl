@@ -1,6 +1,6 @@
-client
-server/node_modules
-server/public/media
+client/
+server/node_modules/
+server/public/media/
 server/.DS_Store
 TouchDesigner/
 .babelrc
