@@ -6,7 +6,7 @@
     "dev": "nodemon --exec babel-node ./src/bin/www",
     "test": "nodemon --exec 'mocha --require babel-register'",
 	"build": "./node_modules/.bin/babel src -d lib -D",
-    "postinstall": "npm run start"
+    "postinstall": "pm2 start ecosystem.config.js; pm2 save"
   },
   "dependencies": {
     "babel-register": "^6.26.0",
