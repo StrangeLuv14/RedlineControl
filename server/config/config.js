@@ -1,11 +1,11 @@
-var os = require('os');
-var env = process.env.NODE_ENV || 'development';
+import os from 'os'
+const env = process.env.NODE_ENV || 'development';
 
-var config = require('./config.json');
-var envConfig = config[env];
+import config from './config.json'
+const envConfig = config[env];
 
 Object.keys(envConfig).forEach((key) => {
     process.env[key] = envConfig[key];
 });
 
-log('Environment:', env);
+log(`Environment:${env}`);

@@ -4,9 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "nodemon --exec babel-node ./bin/www",
+	"staging": "NODE_ENV=staging nodemon --exec babel-node ./bin/www",
     "test": "nodemon --exec 'mocha --require babel-register'",
     "start": "pm2 start ./bin/www",
     "stop": "pm2 stop ./bin/www",
+	"build": "./node_modules/.bin/babel src -d lib",
     "postinstall": "npm run start"
   },
   "dependencies": {
