@@ -9,16 +9,16 @@ import cors from 'cors'
 
 import mongoose from 'mongoose'
 import utils from './models/utils'
-mongoose.connect('mongodb://localhost:27017/RedlineControl', {useNewUrlParser: true})
+mongoose.connect(`mongodb://${process.env.MONGODB_HOST}:27017/RedlineControl`, {useNewUrlParser: true})
 
 import fs from 'fs'
 
 const db = mongoose.connection
 db.on('open', function() {
-    log('Database opened')
+    log(`Database connected to ${process.env.MONGODB_HOST}`)
     utils.loadDatabase(db.db)
 })
-db.on('error', () => error('Database connection failed'))
+db.on('error', () => error(`Database connection to ${env.MONGODB_HOST} failed.`))
 
 import indexRouter from './routes/index'
 import controlRouter from './routes/control'

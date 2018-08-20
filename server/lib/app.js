@@ -56,15 +56,15 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 // mongoDB setup
 
-_mongoose2.default.connect('mongodb://localhost:27017/RedlineControl', { useNewUrlParser: true });
+_mongoose2.default.connect('mongodb://' + process.env.MONGODB_HOST + ':27017/RedlineControl', { useNewUrlParser: true });
 
 var db = _mongoose2.default.connection;
 db.on('open', function () {
-    log('Database opened');
+    log('Database connected to ' + process.env.MONGODB_HOST);
     _utils2.default.loadDatabase(db.db);
 });
 db.on('error', function () {
-    return error('Database connection failed');
+    return error('Database connection to ' + env.MONGODB_HOST + ' failed.');
 });
 
 var app = (0, _express2.default)();

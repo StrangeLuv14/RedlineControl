@@ -20,6 +20,8 @@ sudo apt-get install -y mongodb-org
 ###install nvm
 curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
 #nvm install 8.11.2
+. ~/.bashrc
+nvm install node
 nvm alias default v8.11.2
 nvm use default
 

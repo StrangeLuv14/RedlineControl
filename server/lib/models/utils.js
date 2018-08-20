@@ -133,7 +133,7 @@ var loadDatabase = function loadDatabase(db) {
                     try {
                         _fs2.default.mkdirSync('./public/media/' + file.filename.split('/')[0]);
                     } catch (e) {}
-                    var filepath = _path2.default.join(__dirname, '../public/media/', file.filename);
+                    var filepath = _path2.default.join(__dirname, '../../public/media/', file.filename);
                     bucket.openDownloadStream(file._id).pipe(_fs2.default.createWriteStream(filepath)).on('error', function (err) {
                         log('Error download: ' + err.message);
                     }).on('end', function () {

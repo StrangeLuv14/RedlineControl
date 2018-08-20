@@ -102,7 +102,7 @@ const loadDatabase = (db) => {
                     try {
                         fs.mkdirSync('./public/media/' + file.filename.split('/')[0])
                     } catch (e) {}
-                    const filepath = path.join(__dirname, '../public/media/', file.filename)
+                    const filepath = path.join(__dirname, '../../public/media/', file.filename)
                     bucket.openDownloadStream(file._id).pipe(fs.createWriteStream(filepath)).on('error', (err) => {
                         log(`Error download: ${err.message}`)
                     }).on('end', () => {

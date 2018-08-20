@@ -11,11 +11,9 @@ var _pjlink2 = _interopRequireDefault(_pjlink);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 //Promisfy
-_pjlink2.default.prototype.on = function () {
-    var _this = this;
-
+var on = function on(projector) {
     return new Promise(function (resolve, reject) {
-        _this.powerOn(function (err) {
+        projector.powerOn(function (err) {
             if (err) {
                 reject();
             }
@@ -24,11 +22,9 @@ _pjlink2.default.prototype.on = function () {
     });
 };
 
-_pjlink2.default.prototype.off = function () {
-    var _this2 = this;
-
+var off = function off(projector) {
     return new Promise(function (resolve, reject) {
-        _this2.powerOff(function (err) {
+        projector.powerOff(function (err) {
             if (err) {
                 reject();
             }
@@ -45,36 +41,17 @@ _projector2.default.hosts.forEach(function (host) {
 
 var powerOn = function powerOn() {
     var powerOnList = projectors.map(function (projector) {
-        return projector.on;
+        return on(projector);
     });
     return Promise.all(powerOnList);
 };
 
 var powerOff = function powerOff() {
     var powerOffList = projectors.map(function (projector) {
-        return projector.off;
+        return off(projector);
     });
     return Promise.all(powerOffList);
 };
-
-// const powerOn = function(done) {
-//     projectors.forEach(projector => projector.powerOn((err) => {
-//         if (err) {
-//             return done(err);
-//         }
-//     }));
-//     return done(undefined, "Projectors are on");
-// }
-//
-// const powerOff = function(done) {
-//     projectors.forEach(projector => projector.powerOff((err) => {
-//         if (err) {
-//             return done(err);
-//         }
-//
-//     }));
-//     return done(undefined, "Projectors are off");
-// }
 
 module.exports = {
     powerOn: powerOn,

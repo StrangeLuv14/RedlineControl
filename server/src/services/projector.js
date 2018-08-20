@@ -2,9 +2,9 @@ import config from '../config/projector'
 import PJLink from 'pjlink'
 
 //Promisfy
-PJLink.prototype.on = function() {
+const on = (projector) => {
     return new Promise((resolve, reject) => {
-        this.powerOn((err) => {
+        projector.powerOn((err) => {
             if (err) {
                 reject()
             }
@@ -13,9 +13,9 @@ PJLink.prototype.on = function() {
     })
 }
 
-PJLink.prototype.off = function() {
+const off = (projector) => {
     return new Promise((resolve, reject) => {
-        this.powerOff((err) => {
+        projector.powerOff((err) => {
             if (err) {
                 reject()
             }
@@ -31,33 +31,14 @@ config.hosts.forEach((host) => {
 });
 
 const powerOn = () => {
-    const powerOnList = projectors.map(projector => projector.on)
+    const powerOnList = projectors.map(projector => on(projector))
     return Promise.all(powerOnList)
 }
 
 const powerOff = () => {
-    const powerOffList = projectors.map(projector => projector.off)
+    const powerOffList = projectors.map(projector => off(projector))
     return Promise.all(powerOffList)
 }
-
-// const powerOn = function(done) {
-//     projectors.forEach(projector => projector.powerOn((err) => {
-//         if (err) {
-//             return done(err);
-//         }
-//     }));
-//     return done(undefined, "Projectors are on");
-// }
-//
-// const powerOff = function(done) {
-//     projectors.forEach(projector => projector.powerOff((err) => {
-//         if (err) {
-//             return done(err);
-//         }
-//
-//     }));
-//     return done(undefined, "Projectors are off");
-// }
 
 module.exports = {
     powerOn,

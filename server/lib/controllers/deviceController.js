@@ -19,7 +19,23 @@ var mediaServerControl = function mediaServerControl(req, res) {
 };
 
 var projectorControl = function projectorControl(req, res) {
-    res.json({ projector: 'on' });
+    var command = req.body.control;
+
+    if (command === 'on') {
+        _projector2.default.powerOn().then(function () {
+            res.json({ projector: 'on' });
+        }).catch(function (err) {
+            res.json({ error: err });
+        });
+    } else if (command === 'off') {
+        _projector2.default.powerOff().then(function () {
+            res.json({ projector: 'off' });
+        }).catch(function (err) {
+            res.json({ error: err });
+        });
+    }
+
+    // res.json({projector: 'on'})
 };
 
 exports.default = { mediaServerControl: mediaServerControl, projectorControl: projectorControl };

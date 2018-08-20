@@ -10,6 +10,7 @@ var _osc2 = _interopRequireDefault(_osc);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var remoteAddress = process.env.MEDIASERVER_HOST;
 var udpPort = new _osc2.default.UDPPort({ localAddress: '0.0.0.0', localPort: 57121, metadata: true, broadcast: true });
 
 // udpPort.on('bundle', (oscBundle, timeTag, info) => {
@@ -19,7 +20,7 @@ var udpPort = new _osc2.default.UDPPort({ localAddress: '0.0.0.0', localPort: 57
 udpPort.open();
 
 udpPort.on('ready', function () {
-    log('OSC port ready');
+    log('Mediaserver connected to ' + remoteAddress);
 });
 
 //relay received message back to sendOSC function
@@ -28,11 +29,12 @@ udpPort.on('message', function (msg) {
 });
 
 var sendOSC = function sendOSC(address, args) {
-    log('Send OSC message to ' + address);
+
+    log('Send OSC message ' + address + ' to ' + remoteAddress);
     udpPort.send({
         address: address,
         args: args
-    }, 'localhost', 7000);
+    }, remoteAddress, 7000);
 
     return new Promise(function (resolve, reject) {
         udpPort.once('received', function (msg) {
